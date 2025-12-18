@@ -3,128 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub 全站連結掃描器</title>
+    <title>新莊國小註冊組工作入口網</title>
     <style>
-        body { font-family: "Microsoft JhengHei", Arial, sans-serif; padding: 20px; max-width: 900px; margin: 0 auto; background-color: #f6f8fa; }
-        h2 { color: #24292e; }
-        .controls { background: white; padding: 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); margin-bottom: 20px; }
-        input, button { padding: 10px; font-size: 16px; }
-        button { background-color: #2ea44f; color: white; border: none; border-radius: 6px; cursor: pointer; }
-        button:hover { background-color: #2c974b; }
-        button:disabled { background-color: #94d3a2; cursor: not-allowed; }
+        :root {
+            --primary-color: #2c3e50;
+            --accent-blue: #3498db;
+            --accent-green: #27ae60;
+            --accent-purple: #8e44ad;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary-color);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        p.subtitle {
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 25px;
+            transition: transform 0.2s ease;
+            border-top: 5px solid gray;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+
+        /* 個別卡片顏色設定 */
+        .card.subsidy { border-top-color: var(--accent-blue); }
+        .card.learning { border-top-color: var(--accent-green); }
+        .card.github { border-top-color: var(--accent-purple); }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .link-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        a.btn {
+            text-decoration: none;
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.2s, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        a.btn:hover {
+            opacity: 0.9;
+        }
+
+        /* 主按鈕顏色 */
+        .subsidy .btn { background-color: var(--accent-blue); }
+        .learning .btn { background-color: var(--accent-green); }
+        .github .btn { background-color: var(--accent-purple); }
         
-        .repo-block { background: white; margin-bottom: 15px; border: 1px solid #e1e4e8; border-radius: 6px; overflow: hidden; }
-        .repo-header { background: #f1f8ff; padding: 10px 15px; font-weight: bold; border-bottom: 1px solid #e1e4e8; display: flex; justify-content: space-between; align-items: center; }
-        .repo-content { padding: 10px 15px; }
-        .link-item { padding: 4px 0; border-bottom: 1px solid #eee; }
-        .link-item a { text-decoration: none; color: #0366d6; word-break: break-all; }
-        .link-item a:hover { text-decoration: underline; }
-        .status-msg { margin-top: 10px; font-weight: bold; color: #555; }
-        .badge { background: #eee; padding: 2px 6px; border-radius: 10px; font-size: 0.8em; color: #666; }
+        /* 次要按鈕樣式 (針對新增的連結) */
+        .btn.secondary {
+            background-color: white;
+            border: 2px solid; 
+        }
+
+        /* 補助申請 - 次要按鈕顏色 */
+        .subsidy .btn.secondary {
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+        .subsidy .btn.secondary:hover {
+            background-color: #eaf6fd;
+        }
+
+        /* 學習扶助 - 次要按鈕顏色 */
+        .learning .btn.secondary {
+            color: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+        .learning .btn.secondary:hover {
+            background-color: #eafaf1;
+        }
+
+        /* GitHub - 次要按鈕顏色 (本次新增) */
+        .github .btn.secondary {
+            color: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+        .github .btn.secondary:hover {
+            background-color: #f5eef8;
+        }
+
+        footer {
+            margin-top: auto;
+            padding-top: 40px;
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
 
-    <h2>GitHub 全站網頁掃描器</h2>
-    
-    <div class="controls">
-        <label>目標使用者 (User):</label>
-        <input type="text" id="username" value="issac-sjps">
-        <button id="btnScan" onclick="scanAllRepos()">開始全站掃描</button>
-        <div id="globalStatus" class="status-msg">準備就緒</div>
+    <header>
+        <h1>新莊國小註冊組</h1>
+        <p class="subtitle">工作連結入口網</p>
+    </header>
+
+    <div class="container">
+
+        <div class="card subsidy">
+            <h2>💰 補助申請</h2>
+            <div class="link-group">
+                <a href="https://issac-sjps.github.io/RegistrarSection/" class="btn" target="_blank">
+                    進入補助申請首頁
+                </a>
+                <a href="https://issac-sjps.github.io/RegistrarSection/身分減免名單檢核" class="btn secondary" target="_blank">
+                    身分減免名單檢核
+                </a>
+            </div>
+        </div>
+
+        <div class="card learning">
+            <h2>📚 學習扶助</h2>
+            <div class="link-group">
+                <a href="https://issac-sjps.github.io/LearningAssistance/" class="btn" target="_blank">
+                    進入學習扶助首頁
+                </a>
+                <a href="https://issac-sjps.github.io/LearningAssistance/%E8%80%83%E8%A9%A6%E9%80%9A%E7%9F%A5%E5%96%AE%E8%88%87%E4%B8%8A%E8%AA%B2%E6%84%8F%E9%A1%98%E8%AA%BF%E6%9F%A5%E8%A1%A8" class="btn secondary" target="_blank">
+                    考試通知與意願調查表
+                </a>
+            </div>
+        </div>
+
+        <div class="card github">
+            <h2>🐱 GitHub 資源</h2>
+            <div class="link-group">
+                <a href="https://github.com/issac-sjps/" class="btn" target="_blank">
+                    前往 GitHub Profile
+                </a>
+                <a href="https://issac-sjps.github.io/Home/" class="btn secondary" target="_blank">
+                    GitHub Pages 首頁 (Home)
+                </a>
+            </div>
+        </div>
+
     </div>
 
-    <div id="resultsArea"></div>
+    <footer>
+        &copy; 新莊國小註冊組 (SJPS Registrar Section)
+    </footer>
 
-    <script>
-        async function scanAllRepos() {
-            const user = document.getElementById('username').value;
-            const resultsArea = document.getElementById('resultsArea');
-            const statusLabel = document.getElementById('globalStatus');
-            const btn = document.getElementById('btnScan');
-
-            // 初始化
-            resultsArea.innerHTML = '';
-            statusLabel.textContent = '正在取得專案列表...';
-            btn.disabled = true;
-
-            try {
-                // 1. 取得該使用者所有的 Repositories
-                const userReposUrl = `https://api.github.com/users/${user}/repos?per_page=100`;
-                const repoResponse = await fetch(userReposUrl);
-                
-                if (!repoResponse.ok) throw new Error("找不到使用者或 API 次數限制");
-                
-                const repos = await repoResponse.json();
-                statusLabel.textContent = `找到 ${repos.length} 個專案，開始逐一讀取檔案...`;
-
-                // 2. 針對每一個 Repo 去抓內容
-                for (const repo of repos) {
-                    await fetchRepoContents(user, repo.name, resultsArea);
-                }
-
-                statusLabel.textContent = `掃描完成！共掃描 ${repos.length} 個專案。`;
-
-            } catch (error) {
-                statusLabel.textContent = `發生錯誤: ${error.message}`;
-                statusLabel.style.color = 'red';
-            } finally {
-                btn.disabled = false;
-            }
-        }
-
-        async function fetchRepoContents(user, repoName, container) {
-            // 建立顯示區塊
-            const block = document.createElement('div');
-            block.className = 'repo-block';
-            const header = document.createElement('div');
-            header.className = 'repo-header';
-            header.innerHTML = `<span>📂 ${repoName}</span> <span class="badge" id="badge-${repoName}">讀取中...</span>`;
-            
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'repo-content';
-            contentDiv.id = `content-${repoName}`;
-
-            block.appendChild(header);
-            block.appendChild(contentDiv);
-            container.appendChild(block);
-
-            // GitHub Pages 的基礎網址
-            const pagesBaseUrl = `https://${user}.github.io/${repoName}/`;
-            const apiUrl = `https://api.github.com/repos/${user}/${repoName}/contents/`;
-
-            try {
-                const response = await fetch(apiUrl);
-                if (response.status === 404) {
-                    document.getElementById(`badge-${repoName}`).textContent = "無內容或空專案";
-                    return;
-                }
-                
-                const files = await response.json();
-                let count = 0;
-
-                if (Array.isArray(files)) {
-                    for (const file of files) {
-                        // 過濾邏輯：只抓檔案，忽略 . 開頭的設定檔 (如 .gitignore)
-                        if (file.type === 'file' && !file.name.startsWith('.')) {
-                            const linkDiv = document.createElement('div');
-                            linkDiv.className = 'link-item';
-                            // 組合完整網址
-                            const fullUrl = pagesBaseUrl + encodeURI(file.name);
-                            linkDiv.innerHTML = `<a href="${fullUrl}" target="_blank">${fullUrl}</a>`;
-                            contentDiv.appendChild(linkDiv);
-                            count++;
-                        }
-                    }
-                }
-                
-                document.getElementById(`badge-${repoName}`).textContent = `${count} 個檔案`;
-
-            } catch (e) {
-                document.getElementById(`badge-${repoName}`).textContent = "讀取失敗";
-                console.error(e);
-            }
-        }
-    </script>
 </body>
 </html>
